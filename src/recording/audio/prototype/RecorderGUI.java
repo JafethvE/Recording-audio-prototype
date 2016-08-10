@@ -29,17 +29,14 @@ public class RecorderGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-		//Code to define the UI elements.
         jPanel1 = new javax.swing.JPanel();
         messageLabel = new javax.swing.JLabel();
         titleLabel = new javax.swing.JLabel();
         startButton = new javax.swing.JButton();
         stopButton = new javax.swing.JButton();
 
-		//Default close operation is set to exit program.
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-		//Initialises the jPanel1 UI element.
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -49,34 +46,26 @@ public class RecorderGUI extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(messageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(messageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
-		//Sets the text for the title label.
         titleLabel.setText("Recording prototype");
 
-		//Sets the text for the start button.
         startButton.setText("START");
-		
-		//Sets an actionlistener to the startbutton so the system can respond when it is pressed.
         startButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 startButtonActionPerformed(evt);
             }
         });
 
-		//Sets the text for the stop button.
         stopButton.setText("STOP");
-		
-		//Sets an actionlistener to the startbutton so the system can respond when it is pressed.
         stopButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stopButtonActionPerformed(evt);
             }
         });
 
-		//Sets the layout parameters. Created by the IDE.
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -93,7 +82,7 @@ public class RecorderGUI extends javax.swing.JFrame {
                         .addComponent(startButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(stopButton)
-                        .addGap(0, 11, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -105,7 +94,8 @@ public class RecorderGUI extends javax.swing.JFrame {
                     .addComponent(startButton)
                     .addComponent(stopButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -171,12 +161,12 @@ public class RecorderGUI extends javax.swing.JFrame {
     /**
      * Is triggered when a recording stop attempt is successful.
      */
-    public void recordingStoppedActionPerformed()
+    public void recordingStoppedActionPerformed(FileSystem fileSystem)
     {
         //Tells the user the recording stop attempt was successful.
         //Colour is black to imply being just a notification.
         this.messageLabel.setForeground(Color.BLACK);
-        this.messageLabel.setText("Recording stopped");
+        this.messageLabel.setText("Recording stopped\nFile can be found under: " + fileSystem.getFilePath() + "RecordAudio.wav");
     }
     
     /**
@@ -188,6 +178,17 @@ public class RecorderGUI extends javax.swing.JFrame {
         //Colour is red to imply an error.
         this.messageLabel.setForeground(Color.RED);
         this.messageLabel.setText("Recording not stopped");
+    }
+    
+    /**
+     * Is triggered when the OS is not supported.
+     */
+    public void osNotSupportedActionperformed()
+    {
+        //Tells the user the OS is not supported and recording might not work.
+        //Colour is red to imply an error.
+        this.messageLabel.setForeground(Color.RED);
+        this.messageLabel.setText("OS not supported.\nRecording might not work.");
     }
     
     /**
@@ -206,11 +207,11 @@ public class RecorderGUI extends javax.swing.JFrame {
         gui.setVisible(true);
     }
     
-    //Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;//Generic panel to hold other UI elements.
-    private javax.swing.JLabel messageLabel;//Message label to tell the user what the program is doing and inform them about errors.
-    private javax.swing.JButton startButton;//A button to start recording.
-    private javax.swing.JButton stopButton;//A button to stop recording.
-    private javax.swing.JLabel titleLabel;//Label with the title of the program.
-    //End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel messageLabel;
+    private javax.swing.JButton startButton;
+    private javax.swing.JButton stopButton;
+    private javax.swing.JLabel titleLabel;
+    // End of variables declaration//GEN-END:variables
 }

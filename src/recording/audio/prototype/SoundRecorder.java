@@ -27,6 +27,7 @@ public class SoundRecorder {
     private final RecordingEventCatcher eventCatcher;//An event catcher for Recording Events.
     private AudioFormat format;//An audio format.
     private final Info info;//DataLine info for the capturing of the microphone.
+    private FileSystem fileSystem;
     
     /**
      * A default constructor for the SoundRecorder class.
@@ -34,13 +35,19 @@ public class SoundRecorder {
      */
     public SoundRecorder(RecorderGUI gui)
     {
-        wavFile = new File("C:/Test/RecordAudio.wav");
+        fileSystem = new FileSystem();
+        eventCatcher = new RecordingEventCatcher(gui);
+        if(fileSystem.getOs() == Os.Different)
+        {
+            eventCatcher.osNotSupportedEvent();
+        }
+        new File(fileSystem.getFilePath()).mkdirs();
+        wavFile = new File(fileSystem.getFilePath() + "RecordAudio.wav");
         fileType = AudioFileFormat.Type.WAVE;
         recorderThread = new Thread(this::start);
         recording = false;
-        eventCatcher = new RecordingEventCatcher(gui);
         
-        setAudioFormat(41000, 16, 2, true, true);
+        setAudioFormat(44100, 16, 2, true, true);
         info = new DataLine.Info(TargetDataLine.class, format);
         try
         {
@@ -84,7 +91,7 @@ public class SoundRecorder {
         if(line != null)
         {
             //Checks if system supports the data line
-            if (!AudioSystem.isLineSupported(info))
+            if (AudioSystem.isLineSupported(info))
             {
                 try
                 {
@@ -112,6 +119,7 @@ public class SoundRecorder {
             }
             else
             {
+                //AudioSystem.
                 recording = false;
                 eventCatcher.formatNotSupportedEvent();
             }
@@ -133,7 +141,7 @@ public class SoundRecorder {
             line.close();
             System.out.println("Finished");
             recording = false;
-            eventCatcher.recordingStoppedEvent();
+            eventCatcher.recordingStoppedEvent(fileSystem);
         }
         else
         {

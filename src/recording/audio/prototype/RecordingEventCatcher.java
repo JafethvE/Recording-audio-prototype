@@ -55,10 +55,10 @@ public class RecordingEventCatcher
     /**
      * Is fired when a recording stop attempt is successful.
      */
-    public void recordingStoppedEvent()
+    public void recordingStoppedEvent(FileSystem fileSystem)
     {
         //Tells the GUI to notify the user that the recording stop attempt was successful.
-        gui.recordingStoppedActionPerformed();
+        gui.recordingStoppedActionPerformed(fileSystem);
     }
     
     /**
@@ -68,5 +68,14 @@ public class RecordingEventCatcher
     {
         //Tells the GUI to notify the user that the recording stop attempt was unsuccessful.
         gui.recordingNotStoppedActionPerformed();
+    }
+    
+    /**
+     * Is fired when the OS is not supported.
+     */
+    public void osNotSupportedEvent()
+    {
+        //Tells the GUI to notify the user that the OS is not supported and recording might not work.
+        gui.osNotSupportedActionperformed();
     }
 }
