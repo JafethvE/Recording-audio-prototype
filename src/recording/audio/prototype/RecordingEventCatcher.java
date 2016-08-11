@@ -1,6 +1,7 @@
 package recording.audio.prototype;
 
 /**
+ * An event catcher for recording events.
  *
  * @author Jafeth
  */
