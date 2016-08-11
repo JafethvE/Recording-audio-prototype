@@ -65,10 +65,10 @@ public class FileSystem {
                 filePath = "C:" + fileSeperator + "Test" + fileSeperator;
                 break;
             case Linux:
-                filePath = fileSeperator + "Documents" + fileSeperator + "Test" + fileSeperator;
+                filePath = fileSeperator + "home" + fileSeperator +  System.getProperty("user.name") + fileSeperator + "Documents" + fileSeperator + "Test" + fileSeperator;
                 break;
             case MacOS:
-                filePath = fileSeperator + "Documents" + fileSeperator + "Test" + fileSeperator;
+                filePath = fileSeperator + "home" + fileSeperator +  System.getProperty("user.name") + fileSeperator + "Documents" + fileSeperator + "Test" + fileSeperator;
                 break;
             default:
                 filePath = "";
