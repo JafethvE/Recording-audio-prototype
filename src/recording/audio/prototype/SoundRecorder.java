@@ -22,12 +22,12 @@ public class SoundRecorder {
     private final File wavFile;//Path of the wav file
     private final AudioFileFormat.Type fileType;//Format of audio file
     private TargetDataLine line;//The line from which audio data is captured
-    private final Thread recorderThread;//The seperate thread for the recording of the audio file.
+    private Thread recorderThread;//The seperate thread for the recording of the audio file.
     private boolean recording;//Tells wether the system is recording or not.
     private final RecordingEventCatcher eventCatcher;//An event catcher for Recording Events.
     private AudioFormat format;//An audio format.
-    private final Info info;//DataLine info for the capturing of the microphone.
-    private FileSystem fileSystem;
+    private Info info;//DataLine info for the capturing of the microphone.
+    private final FileSystem fileSystem;
     
     /**
      * A default constructor for the SoundRecorder class.
@@ -44,20 +44,10 @@ public class SoundRecorder {
         new File(fileSystem.getFilePath()).mkdirs();
         wavFile = new File(fileSystem.getFilePath() + "RecordAudio.wav");
         fileType = AudioFileFormat.Type.WAVE;
-        recorderThread = new Thread(this::start);
+        
         recording = false;
         
-        setAudioFormat(44100, 16, 2, true, true);
-        info = new DataLine.Info(TargetDataLine.class, format);
-        try
-        {
-            line = (TargetDataLine) AudioSystem.getLine(info);
-        }
-        catch (LineUnavailableException ex)
-        {
-            Logger.getLogger(SoundRecorder.class.getName()).log(Level.SEVERE, null, ex);
-            eventCatcher.lineNotFoundEvent();
-        }
+        
     }
     
     /**
@@ -71,10 +61,18 @@ public class SoundRecorder {
     /**
      * Starts the recording of the microphone.
      */
-    public void startRecording()
+    public void startRecording(int sampleRate, int sampleSize, int channels)
     {
         if(!recording)
         {
+            recorderThread = new Thread(new Runnable() {
+                @Override
+                public void run()
+                {
+                    SoundRecorder.this.start();
+                }
+            });
+            setAudioFormat(sampleRate, sampleSize, channels, true, true);
             recorderThread.start();
         }
         else
@@ -88,45 +86,54 @@ public class SoundRecorder {
      */
     private void start()
     {
-        if(line != null)
+        info = new DataLine.Info(TargetDataLine.class, format);
+        try
         {
-            //Checks if system supports the data line
-            if (AudioSystem.isLineSupported(info))
+            line = (TargetDataLine) AudioSystem.getLine(info);
+
+            if(line != null)
             {
-                try
+                //Checks if system supports the data line
+                if (AudioSystem.isLineSupported(info))
                 {
-                    //Start capturing
-                    line.open(format);
-                    line.start();   
+                    try
+                    {
+                        //Start capturing
+                        line.open(format);
+                        line.start();   
 
-                    AudioInputStream ais = new AudioInputStream(line);
+                        AudioInputStream ais = new AudioInputStream(line);
 
-                    //This is set before the actual recording start because it will not fire otherwise.
-                    //If an error happens anyway, the recording is set back to false and the recordingNotStartedEvent is fired
-                    //This means the user will not even see the notification of the recording being started.
-                    recording = true;
-                    eventCatcher.recordingStartedEvent();
+                        //This is set before the actual recording start because it will not fire otherwise.
+                        //If an error happens anyway, the recording is set back to false and the recordingNotStartedEvent is fired
+                        //This means the user will not even see the notification of the recording being started.
+                        recording = true;
+                        eventCatcher.recordingStartedEvent();
 
-                    //Start recording
-                    AudioSystem.write(ais, fileType, wavFile);
+                        //Start recording
+                        AudioSystem.write(ais, fileType, wavFile);
+                    }
+                    catch (LineUnavailableException | IOException ex)
+                    {
+                        recording = false;
+                        eventCatcher.recordingNotStartedEvent();
+                    }
                 }
-                catch (LineUnavailableException | IOException ex)
+                else
                 {
+                    //AudioSystem.
                     recording = false;
-                    System.out.println(ex.getMessage());
-                    eventCatcher.recordingNotStartedEvent();
+                    eventCatcher.formatNotSupportedEvent();
                 }
             }
             else
             {
-                //AudioSystem.
-                recording = false;
-                eventCatcher.formatNotSupportedEvent();
+                eventCatcher.lineNotFoundEvent();
             }
         }
-        else
+        catch (Exception ex)
         {
-            eventCatcher.lineNotFoundEvent();
+            eventCatcher.formatNotSupportedEvent();
         }
     }
     
@@ -137,9 +144,10 @@ public class SoundRecorder {
     {
         if(recording)
         {
+            
             line.stop();
             line.close();
-            System.out.println("Finished");
+            recorderThread.interrupt();
             recording = false;
             eventCatcher.recordingStoppedEvent(fileSystem);
         }
