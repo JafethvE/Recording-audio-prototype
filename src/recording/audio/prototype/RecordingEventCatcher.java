@@ -53,6 +53,7 @@ public class RecordingEventCatcher {
 
     /**
      * Is fired when a recording stop attempt is successful.
+     * @param fileSystem The fileSystem object to get the filepath to the recorded file.
      */
     public void recordingStoppedEvent(FileSystem fileSystem) {
         //Tells the GUI to notify the user that the recording stop attempt was successful.

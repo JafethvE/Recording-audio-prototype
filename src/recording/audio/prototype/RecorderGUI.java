@@ -233,6 +233,7 @@ public class RecorderGUI extends javax.swing.JFrame {
 
     /**
      * Is triggered when a recording stop attempt is successful.
+     * @param fileSystem The fileSystem object to get the filepath to the recorded file.
      */
     public void recordingStoppedActionPerformed(FileSystem fileSystem) {
         //Tells the user the recording stop attempt was successful.
