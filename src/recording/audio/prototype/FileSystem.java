@@ -62,7 +62,7 @@ public class FileSystem {
 
         switch (os) {
             case Windows:
-                filePath = "C:" + fileSeperator + "Test" + fileSeperator;
+                filePath = "C:" + fileSeperator + "Users" + fileSeperator + System.getProperty("user.name") + fileSeperator + "Documents" + fileSeperator + "Test" + fileSeperator;
                 break;
             case Linux:
                 filePath = fileSeperator + "home" + fileSeperator +  System.getProperty("user.name") + fileSeperator + "Documents" + fileSeperator + "Test" + fileSeperator;
