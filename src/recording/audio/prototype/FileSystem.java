@@ -68,7 +68,7 @@ public class FileSystem {
                 filePath = fileSeperator + "home" + fileSeperator +  System.getProperty("user.name") + fileSeperator + "Documents" + fileSeperator + "Test" + fileSeperator;
                 break;
             case MacOS:
-                filePath = fileSeperator + "home" + fileSeperator +  System.getProperty("user.name") + fileSeperator + "Documents" + fileSeperator + "Test" + fileSeperator;
+                filePath = fileSeperator + "Users" + fileSeperator +  System.getProperty("user.name") + fileSeperator + "Documents" + fileSeperator + "Test" + fileSeperator;
                 break;
             default:
                 filePath = "";
